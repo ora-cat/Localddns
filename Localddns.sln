@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Localddns", "Localddns\Localddns.csproj", "{E396E7A4-C961-463C-A239-65DFC7A5D76C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalddnsInstaller", "LocalddnsInstaller\LocalddnsInstaller.csproj", "{66F502FD-0CC8-4A53-9251-CD5988E278A4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E396E7A4-C961-463C-A239-65DFC7A5D76C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E396E7A4-C961-463C-A239-65DFC7A5D76C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E396E7A4-C961-463C-A239-65DFC7A5D76C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E396E7A4-C961-463C-A239-65DFC7A5D76C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66F502FD-0CC8-4A53-9251-CD5988E278A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66F502FD-0CC8-4A53-9251-CD5988E278A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66F502FD-0CC8-4A53-9251-CD5988E278A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66F502FD-0CC8-4A53-9251-CD5988E278A4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4174086A-7A31-4309-A00C-CA01DC6C6758}
+	EndGlobalSection
+EndGlobal
