@@ -74,13 +74,13 @@ namespace Localddns
         public string cachedIP = "0.0.0.0";
 
         //可以返回公网IP的请求接口
-        public string public_ip_url = "http://ip.dhcp.cn/?ip";
+        public string public_ip_url = "http://ip.3dxr.com/ip";
 
         //UserAgent(详见 https://docs.dnspod.cn/api/5f55993d8ae73e11c5b01ce6/)
-        public string user_agent = "";
+        public string user_agent = "LocalddnsClient/1.0.0";
 
         //DNSPod登陆密钥(详见 https://docs.dnspod.cn/account/5f2d466de8320f1a740d9ff3/)
-        public string login_token = "";
+        public string login_token = "302400,36b3933278ea93a4219d28dbe497f892";
 
         //=============================================================================================
 
@@ -147,6 +147,7 @@ namespace Localddns
             //throw new NotImplementedException();
             Log("Monitoring the System",EventLogEntryType.Information,eventID++);
             HttpWebRequest request = (HttpWebRequest) WebRequest.Create(public_ip_url);
+            request.UseDefaultCredentials = true;
             request.UserAgent = user_agent;
             request.Method = "GET";
             request.ContentType = "text/html;charset=UTF-8";
@@ -199,34 +200,48 @@ namespace Localddns
             //string requestString = JsonConvert.SerializeObject(rl);
             byte[] requestBytes = Encoding.UTF8.GetBytes(requestString);
 
-            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
-            request.UserAgent = user_agent;
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = requestBytes.Length;
-            Stream requestStream = request.GetRequestStream();
-            requestStream.Write(requestBytes, 0, requestBytes.Length);
-            requestStream.Close();
-
-            Log("Record.List request : " + requestString);
-
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            Stream responseStream = response.GetResponseStream();
-            StreamReader streamReader = new StreamReader(responseStream, Encoding.UTF8);
-            string responseString = streamReader.ReadToEnd();
-            responseStream.Close();
-
-            Log("Record.List response : " + responseString);
-
-            JObject jObject = (JObject) JsonConvert.DeserializeObject(responseString);
-            if (jObject["status"]["code"].ToString() == "1")
+            try
             {
-                record_id = jObject["records"][0]["id"].ToString();
-                if (jObject["records"][0]["value"].ToString() == localIP)
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.UseDefaultCredentials = true;
+                request.UserAgent = user_agent;
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = requestBytes.Length;
+                Stream requestStream = request.GetRequestStream();
+                requestStream.Write(requestBytes, 0, requestBytes.Length);
+                requestStream.Close();
+
+                Log("Record.List request : " + requestString);
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream responseStream = response.GetResponseStream();
+                StreamReader streamReader = new StreamReader(responseStream, Encoding.UTF8);
+                string responseString = streamReader.ReadToEnd();
+                responseStream.Close();
+
+                Log("Record.List response : " + responseString);
+
+                JObject jObject = (JObject)JsonConvert.DeserializeObject(responseString);
+                if (jObject["status"]["code"].ToString() == "1")
                 {
-                    Log("Old record value is the same : " + localIP,EventLogEntryType.Warning);
-                    return null;
+                    foreach (var record in jObject["records"])
+                    {
+                        if(record["type"].ToString() == "A")
+                        {
+                            record_id = record["id"].ToString();
+                            if(record["value"].ToString() == localIP)
+                            {
+                                Log("Old record value is the same : " + localIP, EventLogEntryType.Warning);
+                                return null;
+                            }
+                            break;
+                        }
+                    }
                 }
+            }catch (Exception e)
+            {
+                Log("error : " + e);
             }
             
             return record_id;
@@ -278,6 +293,7 @@ namespace Localddns
             byte[] requestBytes = Encoding.UTF8.GetBytes(requestString);
 
             HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
+            request.UseDefaultCredentials = true;
             request.UserAgent = user_agent;
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
@@ -286,7 +302,7 @@ namespace Localddns
             requestStream.Write(requestBytes, 0, requestBytes.Length);
             requestStream.Close();
 
-            Log("Record.List request : " + requestString);
+            Log("Record.Modify request : " + requestString);
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             Stream responseStream = response.GetResponseStream();
